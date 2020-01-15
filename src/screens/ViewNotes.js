@@ -7,13 +7,6 @@ import { addnote, deletenote } from '../redux/notesApp'
 import Header from '../components/Header'
 
 function ViewNotes({ navigation }) {
-  // const [notes, setNotes] = useState([])
-
-  // const addNote = note => {
-  //   note.id = notes.length + 1
-  //   setNotes([...notes, note])
-  // }
-
   const notes = useSelector(state => state)
   const dispatch = useDispatch()
   const addNote = note => dispatch(addnote(note))
