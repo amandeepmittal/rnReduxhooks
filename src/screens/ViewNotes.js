@@ -1,16 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet, View, FlatList } from 'react-native'
 import { Text, FAB, List } from 'react-native-paper'
+import { useSelector, useDispatch } from 'react-redux'
+import { addnote, deletenote } from '../redux/notesApp'
 
 import Header from '../components/Header'
 
 function ViewNotes({ navigation }) {
-  const [notes, setNotes] = useState([])
+  // const [notes, setNotes] = useState([])
 
-  const addNote = note => {
-    note.id = notes.length + 1
-    setNotes([...notes, note])
-  }
+  // const addNote = note => {
+  //   note.id = notes.length + 1
+  //   setNotes([...notes, note])
+  // }
+
+  const notes = useSelector(state => state)
+  const dispatch = useDispatch()
+  const addNote = note => dispatch(addnote(note))
+  const deleteNote = id => dispatch(deletenote(id))
 
   return (
     <>
@@ -25,10 +32,11 @@ function ViewNotes({ navigation }) {
             data={notes}
             renderItem={({ item }) => (
               <List.Item
-                title={item.noteTitle}
-                description={item.noteValue}
+                title={item.note.noteTitle}
+                description={item.note.noteValue}
                 descriptionNumberOfLines={1}
                 titleStyle={styles.listTitle}
+                onPress={() => deleteNote(item.id)}
               />
             )}
             keyExtractor={item => item.id.toString()}
