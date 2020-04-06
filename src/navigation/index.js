@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 // import AddNotes from '../screens/AddNotes'
 import ViewClients from '../screens/ViewClients'
 import AddClient from '../screens/AddClients'
+import AddClientPic from '../screens/AddClientPic'
 
 const StackNavigator = createStackNavigator(
   // {
@@ -20,6 +21,9 @@ const StackNavigator = createStackNavigator(
     },
     AddClient: {
       screen: AddClient
+    },
+    AddClientPic: {
+      screen: AddClientPic
     }
   },
   {

@@ -3,16 +3,24 @@ import { View, StyleSheet, ScrollView, Text } from 'react-native'
 import { IconButton, TextInput, FAB } from 'react-native-paper'
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import Header from '../components/Header';
+import ImagePickerComponent from '../components/ImagePicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
-export default function AddClient({ navigation }) {
+function AddClient({ navigation }) {
 
+    const [title, setTitle] = useState('')
     const [firstName, setFirstName] = useState('')
     const [middleName, setMiddleName] = useState('')
     const [lastName, setLastName] = useState('')
     const [gender0, setGender] = useState('')
     const [id0, setId0] = useState('')
     const [nationality, setNationality] = useState('')
-    const [date0, setDate0] = useState('')
+
+    const [date0, setDate0] = useState(new Date(6531243))
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+
     const [res0, setRes0] = useState('')
     //const [date1, setDate1] = useState(new Date())
     const [offOpp, setOffOpp] = useState('')
@@ -23,6 +31,26 @@ export default function AddClient({ navigation }) {
     const [emp0, setEmp0] = useState('')
     const [comp0, setComp0] = useState('')
     const [role0, setRole0] = useState('')
+
+    const onChange = (event, selectedDate) => {
+      const currentDate = selectedDate || date0;
+      setDate0(currentDate);
+    };
+
+    const titleIDs = [
+      {
+        label: 'Mr',
+        value: 'MR'
+      },
+      {
+        label: 'Mrs',
+        value: 'MS'
+      },
+      {
+        label: 'Ms',
+        value: 'RS'
+      }
+    ]
 
     const idForms = [
         {
@@ -74,11 +102,11 @@ export default function AddClient({ navigation }) {
       const gender = [
         {
           label: 'Male',
-          value: 'ma',
+          value: 'M',
         },
         {
           label: 'Female',
-          value: 'fem',
+          value: 'F',
         },
       ];
       
@@ -205,14 +233,39 @@ export default function AddClient({ navigation }) {
         },
       ];
 
-    function onSaveClient() {
-        console.log({ firstName, middleName, lastName, gender0, id0,
-          nationality, date0, res0, offOpp, addT, add0,
-      reg0, count0, emp0, comp0, role0})
+      function postClientData () {
+      
+        axios.post('http://192.168.2.116:8081/api/clients',
+            {
+            TitleID: title,
+            FirstName: firstName,
+            MiddleName: middleName,
+            LastName: lastName,
+            GenderID: gender0,
+            IdentificationTypeID: id0,
+            Nationality: nationality,
+            OpenedDate: date0,
+            ResidentType: res0,
+            OpenedBy: offOpp,
+            AddressTypeID: addT,
+            Address1: add0,
+            Region: reg0,
+            Country: count0,
+            OccupationID: emp0,
+            CompanyTypeID: comp0,
+            DesignationID: role0
+          }
+        ).then(response => {
+          if(response.data.status) {
+            console.log(response);
+          }
+        }).catch(error => {console.log(error)});
+        console.log(date0)
+      }
 
-        navigation.state.params.addClients({ firstName, middleName, lastName, gender0, id0,
-                    nationality, date0, res0, offOpp, addT, add0,
-                reg0, count0, emp0, comp0, role0})
+    function onSaveClient() {
+        postClientData();
+        
         navigation.goBack()
     }
 
@@ -224,7 +277,12 @@ export default function AddClient({ navigation }) {
                 style={styles.scrollContainer}
                 contentContainerStyle={styles.scrollContentContainer}>
                   <View>
-                  <Text>First Name</Text>
+                  <Text style={styles.itemPadding}>Select Title</Text>
+                    <RNPickerSelect
+                        items={titleIDs}
+                        onValueChange={(value) => setTitle(value)} />
+
+                  <Text style={{paddingTop: 10}}>First Name</Text>
                     <TextInput 
                         label="Enter your first name"
                         mode='outlined'
@@ -247,19 +305,18 @@ export default function AddClient({ navigation }) {
                         onChangeText={text => setLastName(text)}
                         style={styles.title}
                     />
-                    <Text>Gender</Text>
+                    
+                    <Text style={styles.itemPadding}>Gender</Text>
                     <RNPickerSelect
                         items={gender}
                         onValueChange={(value) => setGender(value)} />
+
+                    <Text>{gender0}</Text>
 
                     <Text style={styles.itemPadding}>Select Type of ID</Text>
                     <RNPickerSelect
                         items={idForms}
                         onValueChange={(value) => setId0(value)} />
-
-                    {/* Placehokder for image picker */}
-                    
-
 
                     <Text style={styles.itemPadding}>Nationality</Text>
                     <TextInput 
@@ -279,13 +336,15 @@ export default function AddClient({ navigation }) {
 
                     {/* Placeholder for datepicker */}
                     <Text style={styles.itemPadding}>Opened On</Text>
-                    <TextInput 
-                        label="PLaceholder for datepicker"
-                        mode='outlined'
-                        onChangeText={text => setDate0(text)}
-                        value={date0}
-                        style={styles.title}
+                    <DateTimePicker
+                      mode={mode}
+                      is24Hour={true}
+                      display="calendar"
+                      onChange={onChange}
+                      value={date0}
                     />
+
+
                     <Text>Opened By</Text>
                     <TextInput 
                         label="Enter your UserID"
@@ -386,7 +445,8 @@ const styles = StyleSheet.create({
       },
     title: {
         fontSize: 24,
-        marginBottom: 20
+        marginBottom: 15,
+        paddingTop: 10
     },
     text: {
         height: 300,
@@ -399,3 +459,5 @@ const styles = StyleSheet.create({
         bottom: 0
     }
   });
+  
+  export default AddClient;

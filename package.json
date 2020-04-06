@@ -8,9 +8,12 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "^2.3.1",
     "@react-native-community/masked-view": "0.1.5",
+    "axios": "^0.19.2",
     "expo": "~36.0.0",
     "expo-font": "~8.0.0",
+    "expo-image-picker": "^8.1.0",
     "lodash.remove": "4.7.0",
     "lodash.values": "^4.3.0",
     "native-base": "^2.13.12",

@@ -1,52 +1,65 @@
-import  React, {useContext} from 'react'
+import  React, {useContext, useState, useEffect} from 'react'
 import {StyleSheet, View, FlatList} from 'react-native';
 import {Text, FAB, List} from 'react-native-paper';
 import {Context as ClientContext} from '../context/ClientContext'
 import Header from '../components/Header'
+import ClientCard from '../components/ClientCard'
+import clientAPI from '../apis/Clients'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 function ViewClients({navigation}){
 
-	const {state, addclient, deleteclient} = useContext(ClientContext)
+	const [clients, setClients] = useState([]);
 
-    const addClients = client => {
-        client.id = state.length + 1
-        addclient(client)
-    }
+	useEffect(() => {
+		getClientsFromAPI()
+	}, [])
 
-    return (
-        <>
-        <Header titleText='Yetu Client Sign Up' />
-        <View style={styles.container}>
-            { state.length === 0 ? (
-                <View style={styles.titleContainer}>
-                    <Text style={styles.title}>You do not have any notes</Text>
-                </View>
-            ): (
-                <FlatList
-                    data={state}
-                    renderItem={({ item }) => (
-                        <List.Item 
-                            title={item.firstName + item.middleName + item.lastName}
-                            description={item.id}
-                            descriptionNumberOfLines={1}
-                            titleStyle={styles.listTitle}
-                            onPress={()=> deleteclient(item.id)}
-                        />
-                    )}
-                    keyExtractor={item => item.id.toString()}
-                />
-            )}
-            
-            <FAB style={styles.fab}
-                small
-                icon='plus'
-                label='Add a new Client'
-                onPress={() => navigation.navigate('AddClient',
-                     {addClients})}
-            />
-        </View>
-        </>
-    )
+	function getClientsFromAPI() {
+		clientAPI.get('/api/clients')
+			.then(async function (response) {
+				setClients(response.data);
+			})
+			.catch(function(error) {
+				console.log(error)
+			})
+	}
+
+	if (!clients) {
+		return (
+			<View style={styles.container}>
+				<View style={styles.titleContainer}>
+					<Text style={styles.title}>You do not have any clients</Text>
+				</View>
+			</View>
+		)
+	} else {
+		return (
+			<>
+			<Header titleText='Yetu Client Sign Up' />
+			<View style={styles.container}>
+					<FlatList
+						data={clients}
+						keyExtractor={(item, index) => 'key' +index}
+						renderItem={({item}) => {
+							return <TouchableWithoutFeedback 
+								onPress={() => navigation.navigate('AddClientPic', {clientDetails: item.ClientID})} >
+										<ClientCard item={item} />
+									</TouchableWithoutFeedback>	
+						}}
+					/>
+				
+				<FAB style={styles.fab}
+					small
+					icon='plus'
+					label='Add a new Client'
+					onPress={() => navigation.navigate('AddClient')}
+				/>
+			</View>
+			</>
+		)
+	}
+    
 }
 
 
