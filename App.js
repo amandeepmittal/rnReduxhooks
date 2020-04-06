@@ -1,15 +1,12 @@
 import React from 'react'
-import { Provider as PaperProvider } from 'react-native-paper'
-import AppNavigator from './src/navigation'
-import { Provider as StoreProvider } from 'react-redux'
-import store from './src/redux/store'
+import {Provider as PaperProvider} from 'react-native-paper'
+import AppNavigator from './src/navigation/index'
+import {Provider as ClientProvider} from './src/context/ClientContext'
 
-export default function App() {
+export default function App(){
   return (
-    <StoreProvider store={store}>
-      <PaperProvider>
-        <AppNavigator />
-      </PaperProvider>
-    </StoreProvider>
+    <ClientProvider>
+      <AppNavigator/>
+    </ClientProvider>
   )
 }

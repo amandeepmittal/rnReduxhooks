@@ -1,19 +1,29 @@
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
-import ViewNotes from '../screens/ViewNotes'
-import AddNotes from '../screens/AddNotes'
+// import ViewNotes from '../screens/ViewNotes'
+// import AddNotes from '../screens/AddNotes'
+import ViewClients from '../screens/ViewClients'
+import AddClient from '../screens/AddClients'
 
 const StackNavigator = createStackNavigator(
+  // {
+  //   ViewNotes: {
+  //     screen: ViewNotes
+  //   },
+  //   AddNotes: {
+  //     screen: AddNotes
+  //   }
+  // },
   {
-    ViewNotes: {
-      screen: ViewNotes
+    ViewClients: {
+      screen: ViewClients
     },
-    AddNotes: {
-      screen: AddNotes
+    AddClient: {
+      screen: AddClient
     }
   },
   {
-    initialRouteName: 'ViewNotes',
+    initialRouteName: 'ViewClients',
     headerMode: 'none',
     mode: 'modal'
   }
