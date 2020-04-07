@@ -36,7 +36,7 @@ function ViewClients({navigation}){
 	} else {
 		return (
 			<>
-			<Header titleText='Yetu Client Sign Up' />
+			<Header titleText='Yetu Client Pictures' />
 			<View style={styles.container}>
 					<FlatList
 						data={clients}
@@ -49,10 +49,17 @@ function ViewClients({navigation}){
 						}}
 					/>
 				
+				<FAB style={styles.fab2}
+					small
+					icon='plus'
+					label='SignUp'
+					onPress={() => navigation.navigate('AddClient')}
+				/>
 				<FAB style={styles.fab}
 					small
 					icon='plus'
-					label='Add a new Client'
+					label='CheckStatus'
+					// add separate screen fro account details
 					onPress={() => navigation.navigate('AddClient')}
 				/>
 			</View>
@@ -81,10 +88,18 @@ const styles = StyleSheet.create({
     fab: {
         backgroundColor: '#219653',
         position: 'absolute',
-        margin: 20,
-        right: 0,
+		margin: 20,
+		marginLeft: -10,
+        right: -15,
         bottom: 10
-    },
+	},
+	fab2: {
+		backgroundColor: '#219678',
+		position: 'absolute',
+		margin: 20,
+		left: 0,
+		bottom: 10
+	},
     listTitle: {
         fontSize: 20
     }

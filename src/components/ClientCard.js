@@ -8,7 +8,7 @@ const ClientCard = ({ item }) => {
     return (
         <View style={styles.cardView}>
             <Text style={styles.title}> {item.ClientID}</Text>
-            <Text style={styles.author}>{item.FirstName + item.MiddleName + item.LastName} </Text>
+            <Text style={styles.author}>{item.Name ? item.FirstName : item.LastName} </Text>
         </View>
     )
 }

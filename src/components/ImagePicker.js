@@ -13,29 +13,30 @@ export default function ImagePickerComponent(props) {
 
         data.append("photo", {
             name: photo.fileName,
-            type: photo.type,
-            // uri:  Platform.OS === "android" ? imageUri : imageUri.replace("file://", "")
+            type: "image/jpeg",
+            uri:  Platform.OS === "android" ? photo.localUri : photo.localUri.replace("file://", "")
         });
 
         Object.keys(body).forEach(key => {
             data.append(key, body[key]);
         });
-
+        console.log(data)
 
         return data;
     }
 
     uploadImageHandler = () => {
-        fetch('http://192.168.2.116:8089/api/upload', {
+        fetch('http://192.168.2.116:8081/api/upload', {
             method: "POST",
-            body: createFormData(selectedImage, {userID: "123"})
+            body: createFormData(selectedImage, { dataType: props.dataType })
         })
             .then(response => response.json())
             .then(response => {
-                Alert.alert("Upload Success")
+                alert("Upload Success")
             })
             .catch(error => {
-                Alert.alert('Upload Failed')
+                alert('Upload Failed')
+                console.log(error)
             })
     }
 
@@ -54,8 +55,7 @@ export default function ImagePickerComponent(props) {
             return;
         }
       
-          setSelectedImage({ localUri: pickerResult.uri });
-          setImageUri(pickerResult.uri);
+          setSelectedImage({ localUri: pickerResult.uri, fileName: props.UserID, type: props.imageType });
         
         };
       
@@ -66,6 +66,7 @@ export default function ImagePickerComponent(props) {
                 source={{ uri: selectedImage.localUri }}
                 style={styles.thumbnail}
               />
+              {console.log(selectedImage)}
               {uploadImageHandler()}
             </View>
           );
